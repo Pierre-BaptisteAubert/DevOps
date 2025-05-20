@@ -1,0 +1,50 @@
+services:
+
+    database:
+        build: ./Database
+        image: postgresdb
+        container_name: postgresdb1
+        env_file:
+          - ./Database/.env
+        volumes:
+          - datapostgres:/var/lib/postgresql/data
+        networks:
+          - app-network
+        restart: unless-stopped # we would put a unless stopped here
+
+    backend:
+        build: ./simpleapi
+        image: springapp
+        container_name: springapi1
+        env_file:
+          - ./simpleapi/.env
+        depends_on:
+          - database
+        networks:
+          - app-network
+          - app-network2
+        restart: on-failure:3
+        
+        
+
+    httpd:
+        build: ./http-server
+        image: httpproxy
+        container_name: apacheserver1
+        depends_on:
+          - backend
+        ports:
+          - "80:80"
+        networks:
+          - app-network2
+        restart: no
+
+networks:
+  app-network:
+  app-network2:
+
+
+volumes:
+  datapostgres:
+
+  

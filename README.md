@@ -69,6 +69,11 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]
 
 **The result:** a lightweight, production-ready Docker image that contains only what's necessary to run your Spring Boot app.
 
+### 1-5 Why do we need a reverse proxy?
 
+A reverse proxy acts as an intermediary between the client and the API in this case.
+We need it to simplify access — instead of using http://localhost:8080/, we can just use http://localhost/.
+It also allows us to unify ports, so we no longer need to expose multiple ones.
+Finally, the reverse proxy helps organize and manage different connections.
 
 
