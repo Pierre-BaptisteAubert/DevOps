@@ -202,5 +202,10 @@ It enables **portability**, **automation**, and **reproducibility** of our appli
 
 ### 2-1: What are testcontainers?
 
-**Answer:**  
 They simply are java libraries that allow you to run a bunch of docker containers while testing. 
+
+### 2-2: For what purpose do we need to use secured variables?
+
+We use secured (or secret) variables in GitHub Actions to safely store sensitive information such as passwords, API keys, or login credentials (like Docker Hub credentials). These variables are encrypted and not exposed in the workflow logs or source code, which prevents unauthorized access and protects against security risks like credential leaks. Using secured variables ensures that sensitive data remains confidential while enabling automated workflows to authenticate and perform tasks that require secure access.
+
+
