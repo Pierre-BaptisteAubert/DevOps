@@ -184,11 +184,6 @@ docker push pierrebaptisteaubert/springapp:1.0
 docker push pierrebaptisteaubert/postgresdb:1.0
 docker push pierrebaptisteaubert/httpproxy:1.0 
 ```
-
-🔗 **Published image**:  
-[https://hub.docker.com/r/pbaubert/myfirstdatabase](https://hub.docker.com/r/pbaubert/myfirstdatabase)  
-(Tag used: `latest`, or a specific version like `:v1`)
-
 ---
 
 ### 1-10 Why do we put our images into an online repo?
