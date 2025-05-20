@@ -196,3 +196,11 @@ We publish Docker images to an **online repository** (like DockerHub) to:
 - **Access** images from anywhere with `docker pull`
 
 It enables **portability**, **automation**, and **reproducibility** of our applications.
+
+
+## TP 19/05/2025
+
+### 2-1: What are testcontainers?
+
+**Answer:**  
+They simply are java libraries that allow you to run a bunch of docker containers while testing. 
