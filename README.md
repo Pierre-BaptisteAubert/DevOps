@@ -166,3 +166,38 @@ docker-compose restart       # Restart services
 
 - `datapostgres`: to persist PostgreSQL data
 
+### 1-9 Document your publication commands and published images in DockerHub
+
+#### 🔹 Commands to publish an image
+
+```bash
+# 1. Log in to DockerHub
+docker login
+
+# 2. Tag your local image with your DockerHub username and image name
+docker tag springapp pierrebaptisteaubert/springapp:1.0 
+docker tag postgresdb pierrebaptisteaubert/postgresdb:1.0
+docker tag httpproxy pierrebaptisteaubert/httpproxy:1.0 
+
+# 3. Push the image to DockerHub
+docker push pierrebaptisteaubert/springapp:1.0
+docker push pierrebaptisteaubert/postgresdb:1.0
+docker push pierrebaptisteaubert/httpproxy:1.0 
+```
+
+🔗 **Published image**:  
+[https://hub.docker.com/r/pbaubert/myfirstdatabase](https://hub.docker.com/r/pbaubert/myfirstdatabase)  
+(Tag used: `latest`, or a specific version like `:v1`)
+
+---
+
+### 1-10 Why do we put our images into an online repo?
+
+We publish Docker images to an **online repository** (like DockerHub) to:
+
+- **Share** images with collaborators or the public
+- **Deploy** images easily on remote servers or cloud environments
+- **Version** our builds and ensure consistency across environments
+- **Access** images from anywhere with `docker pull`
+
+It enables **portability**, **automation**, and **reproducibility** of our applications.
