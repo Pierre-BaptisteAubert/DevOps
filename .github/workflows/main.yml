@@ -40,19 +40,20 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./simpleapi
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+          push:  ${{ github.ref == 'refs/heads/main' }}
+
 
       - name: Build image and push database
         uses: docker/build-push-action@v6
         with:
           context: ./Database
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
+          push:  ${{ github.ref == 'refs/heads/main' }}
 
       - name: Build image and push httpd
         uses: docker/build-push-action@v6
         with:
           context: ./http-server
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+          push: ${{ github.ref == 'refs/heads/main' }}

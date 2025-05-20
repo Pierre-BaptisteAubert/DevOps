@@ -208,4 +208,23 @@ They simply are java libraries that allow you to run a bunch of docker container
 
 We use secured (or secret) variables in GitHub Actions to safely store sensitive information such as passwords, API keys, or login credentials (like Docker Hub credentials). These variables are encrypted and not exposed in the workflow logs or source code, which prevents unauthorized access and protects against security risks like credential leaks. Using secured variables ensures that sensitive data remains confidential while enabling automated workflows to authenticate and perform tasks that require secure access.
 
+### 2-3 Why did we put needs: test-backend on this job?
+We use needs: test-backend to ensure that the build-and-push-docker-image job only runs if the tests pass. This is a good CI/CD practice because:
 
+ - It prevents broken code from being packaged and pushed to Docker Hub.
+ - It guarantees that only validated, working code reaches the delivery stage.
+ - It helps maintain the integrity of the images stored in the registry.
+ 
+> If you remove the needs: dependency, the build-and-push job may run in parallel with tests, or even if the tests fail, which would break the idea of reliable Continuous Delivery.
+
+### 2-4 For what purpose do we need to push Docker images?
+
+We push Docker images to a remote registry (like Docker Hub) to make them:
+
+- **Accessible from anywhere**: CI/CD pipelines, teammates, and deployment servers can pull the same image.
+- **Reproducible**: Ensures that everyone runs the exact same environment, avoiding "it works on my machine" issues.
+- **Deployable**: Enables automatic deployment to production or staging environments using container orchestration tools like Kubernetes or Docker Compose.
+- **Version-controlled**: Each pushed image can be tagged (e.g., `1.0`, `latest`, `staging`) for easy tracking and rollback if needed.
+- **Scalable**: Supports modern deployment workflows with cloud providers and microservices architectures.
+
+> In short, pushing Docker images is essential for automation, sharing, deployment, and consistency in modern DevOps workflows.
