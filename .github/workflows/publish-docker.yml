@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Test Backend"]
+    types:
+      - completed
 
 jobs:
   build-and-push-docker-image:
-    needs: test-backend
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
 
     steps:
