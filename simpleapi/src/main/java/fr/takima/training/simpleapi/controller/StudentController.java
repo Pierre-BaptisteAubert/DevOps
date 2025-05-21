@@ -73,6 +73,6 @@ public class StudentController {
     }
     @GetMapping(value = "/test ")
     public ResponseEntity<Object> test() {
-        return ResponseEntity.ok("Test2");
+        return ResponseEntity.ok("Test3");
     }
 }
