@@ -1,0 +1,19 @@
+---
+- name: Deploy full application stack with Docker
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3  # Assure le bon interpréteur pour les modules Docker
+
+  
+
+
+  roles:
+    - deploy_env         # Déploiement du fichier .env pour la base de données
+    - docker      # Installation de Docker et dépendances
+    - create_network      # Création des réseaux Docker nécessaires
+    - launch_database     # Lancement de la base de données Postgres
+    - launch_app          # Lancement de l'application Spring Boot
+    - launch_proxy        # Lancement du reverse proxy HTTP (Apache)

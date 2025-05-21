@@ -1,0 +1,10 @@
+---
+- name: Create Docker network "frontend"
+  docker_network:
+    name: app-network
+    state: present
+
+- name: Create Docker network "backend"
+  docker_network:
+    name: app-network2
+    state: present

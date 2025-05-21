@@ -1,5 +1,5 @@
 # DevOps - Pierre-Baptiste Aubert
-## TP 19/05/2025
+## TP1 19/05/2025
 
 ### 1-1 For which reason is it better to run the container with a flag `-e` to give the environment variables rather than put them directly in the Dockerfile?
 
@@ -198,7 +198,7 @@ We publish Docker images to an **online repository** (like DockerHub) to:
 It enables **portability**, **automation**, and **reproducibility** of our applications.
 
 
-## TP 19/05/2025
+## T2P 19/05/2025
 
 ### 2-1: What are testcontainers?
 
@@ -228,3 +228,190 @@ We push Docker images to a remote registry (like Docker Hub) to make them:
 - **Scalable**: Supports modern deployment workflows with cloud providers and microservices architectures.
 
 > In short, pushing Docker images is essential for automation, sharing, deployment, and consistency in modern DevOps workflows.
+
+
+
+## TP3 21/05/2025
+
+### 3-1 Document your inventory and base commands
+
+In this project, we use an Ansible inventory file to define the remote server and how to connect to it. The inventory is located at:
+
+```
+ansible/inventories/setup.yml
+```
+
+#### Inventory File Example
+
+```yaml
+all:
+  vars:
+    ansible_user: admin
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+  children:
+    prod:
+      hosts:
+        lucas.pontes.takima.cloud
+```
+
+This configuration sets:
+
+- `admin` as the SSH user.
+- The private key located at `~/.ssh/id_rsa` for authentication.
+- A group named `prod` containing the host `lucas.pontes.takima.cloud`.
+
+---
+
+#### Base Ansible Commands
+
+##### Test connection (ping):
+
+```bash
+ansible all -i ansible/inventories/setup.yml -m ping
+```
+
+##### Get OS distribution info:
+
+```bash
+ansible all -i ansible/inventories/setup.yml -m setup -a "filter=ansible_distribution*"
+```
+
+##### Uninstall Apache2 if installed:
+
+```bash
+ansible all -i ansible/inventories/setup.yml -m apt -a "name=apache2 state=absent" --become
+```
+
+> ℹ️ The `--become` flag allows privilege escalation (like using `sudo`).
+
+---
+
+Ansible ensures that your infrastructure reaches and maintains the desired state. These commands make server configuration automated, consistent, and reliable.
+
+### 3-2 Document your playbook
+
+This Ansible playbook installs and configures Docker on all target hosts. It performs the following actions:
+
+```yaml
+- hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    # 1. Install prerequisites for Docker
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - python3-venv
+        state: latest
+        update_cache: yes
+
+    # 2. Add Docker’s official GPG key
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    # 3. Add the Docker APT repository
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_facts['distribution_release'] }} stable"
+        state: present
+        update_cache: yes
+
+    # 4. Install Docker
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    # 5. Install Python3 and pip3
+    - name: Install Python3 and pip3
+      apt:
+        name:
+          - python3
+          - python3-pip
+        state: present
+
+    # 6. Create a virtual environment for Python packages
+    - name: Create a virtual environment for Docker SDK
+      command: python3 -m venv /opt/docker_venv
+      args:
+        creates: /opt/docker_venv
+
+    # 7. Install Docker SDK for Python inside the virtual environment
+    - name: Install Docker SDK for Python in virtual environment
+      command: /opt/docker_venv/bin/pip install docker
+
+    # 8. Ensure Docker service is running
+    - name: Make sure Docker is running
+      service:
+        name: docker
+        state: started
+      tags: docker
+```
+### 3-3 Documenting `docker_container` Tasks Configuration
+
+```yaml
+# 1. Deploy .env file to server
+- name: Deploy .env file to server
+  copy:
+    src: files/.env
+    dest: /tmp/db.env
+
+# 2. Create Docker network "frontend"
+- name: Create Docker network "frontend"
+  docker_network:
+    name: app-network
+    state: present
+
+# 3. Create Docker network "backend"
+- name: Create Docker network "backend"
+  docker_network:
+    name: app-network2
+    state: present
+
+# 4. Launch PostgreSQL container
+- name: Launch PostgreSQL container
+  docker_container:
+    name: postgres_container
+    image: pierrebaptisteaubert/tp-devops-database:latest
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: app-network
+    env_file: /tmp/db.env
+
+# 5. Launch Spring Boot App container
+- name: Launch Spring Boot App container
+  docker_container:
+    name: springapi1
+    image: pierrebaptisteaubert/tp-devops-simple-api
+    pull: yes
+    env_file: /tmp/db.env
+    networks:
+      - name: app-network
+      - name: app-network2
+    restart_policy: on-failure
+    restart_retries: 3
+    state: started
+
+# 6. Launch HTTP Proxy container
+- name: Launch HTTP Proxy container
+  docker_container:
+    name: apacheserver1
+    image: pierrebaptisteaubert/tp-devops-httpd
+    state: started
+    published_ports:
+      - "80:80"
+    networks:
+      - name: app-network2
+    restart_policy: "no"
+
+
+

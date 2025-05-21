@@ -1,0 +1,12 @@
+
+- name: Launch HTTP Proxy container
+  docker_container:
+    name: apacheserver1
+    image: pierrebaptisteaubert/tp-devops-httpd
+    state: started
+    published_ports:
+      - "80:80"
+    networks:
+      - name: app-network2
+    restart_policy: "no"
+ 

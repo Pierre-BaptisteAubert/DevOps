@@ -1,0 +1,8 @@
+
+  
+- name: Deploy .env file to server
+  copy:
+    src: files/.env
+    dest: /tmp/db.env
+
+    

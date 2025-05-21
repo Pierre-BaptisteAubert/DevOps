@@ -1,0 +1,14 @@
+
+
+- name: Launch Spring Boot App container
+  docker_container:
+    name: springapi1
+    image: pierrebaptisteaubert/tp-devops-simple-api
+    pull: yes
+    env_file: /tmp/db.env
+    networks:
+      - name: app-network
+      - name: app-network2
+    restart_policy: on-failure
+    restart_retries: 3
+    state: started
