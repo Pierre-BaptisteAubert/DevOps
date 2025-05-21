@@ -1,12 +1,9 @@
-- name: Remove existing Docker image (force pull workaround)
-  docker_image:
-    name: pierrebaptisteaubert/tp-devops-database:latest
-    state: absent
 
 - name: Launch PostgreSQL container
   docker_container:
     name: postgres_container
     image: pierrebaptisteaubert/tp-devops-database:latest
+    pull: yes
     state: started
     restart_policy: unless-stopped
     networks:

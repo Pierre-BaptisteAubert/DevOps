@@ -1,12 +1,10 @@
-- name: Remove existing Docker image (force pull workaround)
-  docker_image:
-    name: pierrebaptisteaubert/tp-devops-httpd:latest
-    state: absent
+
 
 - name: Launch HTTP Proxy container
   docker_container:
     name: apacheserver1
-    image: pierrebaptisteaubert/tp-devops-httpd
+    image: pierrebaptisteaubert/tp-devops-httpd:latest
+    pull: yes
     state: started
     published_ports:
       - "80:80"

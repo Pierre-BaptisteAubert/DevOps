@@ -71,7 +71,7 @@ public class StudentController {
 
         return ResponseEntity.ok().build();
     }
-    @GetMapping(value = "/test ")
+    @GetMapping(value = "/tests ")
     public ResponseEntity<String> testEndPoint() {
         return ResponseEntity.ok("Test3");
     }
