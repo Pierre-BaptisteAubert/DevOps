@@ -1,3 +1,8 @@
+- name: Remove existing Docker image (force pull workaround)
+  docker_image:
+    name: pierrebaptisteaubert/tp-devops-httpd:latest
+    force: true
+    state: absent
 
 - name: Launch HTTP Proxy container
   docker_container:
