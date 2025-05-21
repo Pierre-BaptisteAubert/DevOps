@@ -1,20 +1,9 @@
-const express = require('express');
-const { execSync } = require('child_process');
-const app = express();
-
-app.get('/', (req, res) => {
-  const lastPush = execSync('git log -1 --format=%cd').toString().trim();
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head><meta charset="UTF-8"><title>Welcome</title></head>
-    <body>
-      <h1>My App Gateway</h1>
-      <p>All requests are reverse-proxied to the backend.</p>
-      <p>Dernier push : ${lastPush}</p>
-    </body>
-    </html>
-  `);
-});
-
-app.listen(8080);
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Welcome</title></head>
+<body>
+  <h1>My App Gateway</h1>
+  <p>All requests are reverse-proxied to the backend.</p>
+  <p>Dernier push : 2024-06-10 14:23:45</p>
+</body>
+</html>

@@ -71,4 +71,8 @@ public class StudentController {
 
         return ResponseEntity.ok().build();
     }
+    @GetMapping(value = "/test ")
+    public ResponseEntity<Object> test() {
+        return ResponseEntity.ok("Test");
+    }
 }
