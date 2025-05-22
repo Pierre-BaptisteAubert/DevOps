@@ -4,7 +4,6 @@
     name: postgres_container
     image: pierrebaptisteaubert/tp-devops-database:latest
     pull: yes
-    state: started
     restart_policy: unless-stopped
     networks:
       - name: app-network
